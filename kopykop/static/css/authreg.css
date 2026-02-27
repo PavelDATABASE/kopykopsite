@@ -1,0 +1,95 @@
+
+* {
+    box-sizing: border-box;
+}
+
+h2{
+    color:black;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    margin: 0 0 20px 0;
+}
+
+.registration{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 15px;
+    min-height: calc(100vh - 100px);
+}
+
+.registration form{
+    width: 100%;
+    max-width: 400px;
+    padding: 30px 20px;
+    border-radius:10px;
+    box-shadow:4px 4px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    background-color: #F5F5F5;
+}
+
+.form-group{
+    text-align: center;
+    padding: 10px 5px;
+}
+
+.form-group input{
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid #000;
+    padding:12px 15px;
+    outline: none;
+    font-size: 14px;
+}
+
+.form-group a{
+    text-decoration: none;
+    color: #E9967A;
+    transition: 0.3s all;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.form-group a:hover{
+    color: red;
+}
+
+.text-auth{
+    color: #A9A9A9;
+    font-family: 'Roboto', sans-serif;
+    margin: 10px 0 5px 0;
+}
+
+.button{
+    width: 100%;
+    max-width: 200px;
+    padding: 12px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.button:hover{
+    background-color: #555;
+}
+
+/* ===== Медиа-запросы ===== */
+@media (max-width: 576px) {
+    .registration form {
+        padding: 20px 15px;
+    }
+    
+    .form-group input {
+        max-width: 100%;
+    }
+    
+    h2 {
+        font-size: 20px;
+    }
+}

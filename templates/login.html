@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Авторизация</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/authreg.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<header>
+{% include 'header.html' %} 
+</header>
+<div class="registration">
+    <form method="post">
+        <h2 class="text-center">Авторизация</h2>
+        <div class="form-group">
+            <input type="text" name="username" placeholder="Логин">
+        </div>
+        <div class="form-group">
+            <input type="password" name="password" placeholder="Пароль">
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Войти" class="button">
+        </div>
+        <div class="form-group">
+            <P class="text-auth">Не зарегестрированы?</P><a href="{% url 'register' %}"> Зарегестрироваться</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+    {% load static %}
+    <div class="container">
+        <div class="logo">
+            <a href="/"><img src="{% static "images/logo.png" %}" alt="чгн"></a>
+        </div>
+        <div class="menu">
+            <nav>
+                <ul>
+                    <li><a href="/" class="nav-link">Главная</a></li>
+                    <li><a href="{% url 'price' %}" class="nav-link">Прайс-лист</a></li>
+                    <li><a href="{% url 'about' %}" class="nav-link">О нас</a></li>
+                    {% if not user.is_authenticated %}
+                    <li><a href="{% url 'login' %}" class="nav-link">Авторизация</a></li>
+                    {% endif %}
+                    {% if user.is_authenticated and not user.is_superuser %}
+                    <li><a href="#" class="nav-link">Профиль</a></li>
+                    {% endif %}
+                    {% if user.is_authenticated and user.is_superuser %}
+                    <li><a href="/admin/" class="nav-link">Админ-панель</a></li>
+                    {%endif%}
+                </ul>
+            </nav>
+        </div>
+    </div>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прайс-лист</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<header>
+{% include 'header.html' %}
+</header>
+	<div class="container-price">
+    <table class="table">
+	<thead>
+		<tr>
+			<th>Наименование услуги</th>
+			<th>Стоимость</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for el in price %}
+		<tr>
+			<td>{{ el.name }}</td>
+			<td>{{ el.count }} Р</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+	</div>
+</body>
+</html>

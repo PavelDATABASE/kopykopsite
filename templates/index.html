@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Копи-центр</title>
+    {% load static %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<header>
+{% include 'header.html' %}
+</header>
+{% for n in news %}
+<div class="container-2">
+       <h5>{{ n.title_big }}</h5>
+       <h3>{{ n.title }}</h3>
+       <p>{{ n.description }}</p>
+    </div>
+    {% endfor %}
+</body>
+</html>
