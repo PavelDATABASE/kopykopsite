@@ -1,21 +1,36 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Копи-центр</title>
     {% load static %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
+
 <body>
-<header>
-{% include 'header.html' %}
-</header>
-{% for n in news %}
-<div class="container-2">
-       <h5>{{ n.title_big }}</h5>
-       <h3>{{ n.title }}</h3>
-       <p>{{ n.description }}</p>
+    <header>
+        {% include 'header.html' %}
+    </header>
+    {% for n in news %}
+    <div class="container-2">
+        <div class="img-menu">
+            {% if n.images %}
+            <img src="{{ n.images.url }}" alt="картинка">
+            {% endif %}
+        </div>
+
+        <div class="news">
+            <p class="news-big-title">{{ n.title_big }}</p>
+        </div>
+        <div class="news">
+            <p class="news-title">{{ n.title }}</p>
+        </div>
+        <div class="news">
+            <p class="news-text">{{ n.description }}</p>
+        </div>
     </div>
     {% endfor %}
 </body>
+
 </html>

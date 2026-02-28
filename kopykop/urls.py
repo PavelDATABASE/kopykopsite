@@ -19,6 +19,9 @@ from django.urls import path
 from . import views as auth_views
 from . import views
 from django.views.generic import TemplateView
+from django.conf.urls.static import static
+from django.conf import settings
+
 urlpatterns = [
     path("", views.index, name='index'),
     path('register/', auth_views.register, name = 'register'),
@@ -27,3 +30,5 @@ urlpatterns = [
     path('abot/', views.about, name = 'about'),
     path('admin/', admin.site.urls),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
