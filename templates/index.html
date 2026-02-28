@@ -12,25 +12,92 @@
     <header>
         {% include 'header.html' %}
     </header>
-    {% for n in news %}
-    <div class="container-2">
-        <div class="img-menu">
+
+    <!-- Карусель -->
+    <div class="carousel">
+        <div class="carousel-track">
+            {% for n in news %}
             {% if n.images %}
-            <img src="{{ n.images.url }}" alt="картинка">
+            <div class="carousel-slide {% if forloop.first %} active {% endif %}">
+                <img src="{{ n.images.url }}" alt="картинка">
+                {% if n.images_title_big or n.images.title or n.images_description %}
+                <div class="carousel-content">
+                    {% if n.images_title_big %}<p class="news-big-title">{{ n.images_title_big }}</p>{% endif %}
+                    {% if n.images_title %}<p class="news-title">{{ n.images_title }}</p>{% endif %}
+                    {% if n.images_description %}<p class="news-text">{{ n.images_description }}</p>{% endif %}
+                </div>
+                {%endif%}
+            </div>
             {% endif %}
+            {% endfor %}
         </div>
 
-        <div class="news">
-            <p class="news-big-title">{{ n.title_big }}</p>
-        </div>
-        <div class="news">
-            <p class="news-title">{{ n.title }}</p>
-        </div>
-        <div class="news">
-            <p class="news-text">{{ n.description }}</p>
+        <button class="carousel-btn prev" onclick="moveSlide(-1)">&#10094;</button>
+        <button class="carousel-btn next" onclick="moveSlide(1)">&#10095;</button>
+
+        <div class="carousel-dots">
+            {% for n in news %}
+            {% if n.images %}
+            <button class="carousel-dot{% if forloop.first %} active{% endif %}"
+                onclick="goToSlide({{ forloop.counter0 }})"></button>
+            {% endif %}
+            {% endfor %}
         </div>
     </div>
-    {% endfor %}
+
+    <script>
+        let currentSlide = 0;
+        let slides;
+        let dots;
+        let autoSlideInterval;
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function () {
+            slides = document.querySelectorAll('.carousel-slide');
+            dots = document.querySelectorAll('.carousel-dot');
+
+            // Запустить автоматическую прокрутку
+            startAutoSlide();
+        });
+
+        function showSlide(n) {
+            // Скрываем все слайды
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+
+            // Вычисляем индекс
+            if (n >= slides.length) currentSlide = 0;
+            else if (n < 0) currentSlide = slides.length - 1;
+            else currentSlide = n;
+
+            // Показываем текущий слайд
+            slides[currentSlide].classList.add('active');
+            if (dots[currentSlide]) {
+                dots[currentSlide].classList.add('active');
+            }
+        }
+
+        function moveSlide(direction) {
+            showSlide(currentSlide + direction);
+            resetAutoSlide();
+        }
+
+        function goToSlide(n) {
+            showSlide(n);
+            resetAutoSlide();
+        }
+
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(() => {
+                showSlide(currentSlide + 1);
+            }, 4000); 
+        }
+
+        function resetAutoSlide() {
+            clearInterval(autoSlideInterval);
+            startAutoSlide();
+        }
+    </script>
 </body>
 
 </html>

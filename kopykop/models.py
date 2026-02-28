@@ -19,6 +19,9 @@ class News(models.Model):
     title_big = models.CharField(max_length=100, verbose_name="Важная новость", null=True, blank=True)
     description = models.CharField(max_length=1000, verbose_name="Описание новости", null=True, blank=True)
     images = models.ImageField(upload_to='uploads/%Y/%m/%d/', verbose_name="Изображение", null=True, blank=True)
+    images_title_big = models.CharField(max_length=100, verbose_name="Текст услуги (большой)", null=True, blank=True)
+    images_title = models.CharField(max_length=100, verbose_name="Текст услуги (средний)", null=True, blank=True)
+    images_description = models.CharField(max_length=100, verbose_name="Описание услуги", null=True, blank=True)
     
     class Meta:
         ordering = ('id', )
