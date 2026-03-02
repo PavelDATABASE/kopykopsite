@@ -32,4 +32,18 @@ class News(models.Model):
         return self.title_big or self.title or "Без названия"
     
     
+class Orders(models.Model):
+    name = models.ForeignKey(PriceList, on_delete=models.CASCADE, related_name='names')
     
+    orders_name = models.CharField(max_length=100, verbose_name="Название заказа", null=True, blank=True)
+    number = models.CharField(max_length=15, verbose_name="Номер телефона", null=True, blank=True)
+    fio = models.CharField(max_length=100, verbose_name="Ф.И", blank=True, null=True)
+    
+    class Meta:
+        ordering = ('id', )
+        verbose_name = "Заказ"
+        verbose_name_plural = "Заказы"
+        
+    def __str__(self):
+        return self.orders_name
+        

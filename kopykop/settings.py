@@ -28,7 +28,7 @@ DEBUG = True
 
 # AUTH_USER_MODEL = 'kopykop.CustomUser'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 MEDIA_URL = '/media/'

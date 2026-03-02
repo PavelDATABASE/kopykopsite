@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from .models import PriceList, News
+from .models import PriceList, News, Orders
 
 
 @csrf_exempt
@@ -30,12 +30,15 @@ def user_login(request):
         user = authenticate(request, username = username, password = password)
         if user is not None: 
             login(request, user)
-            return redirect('login')
+            return redirect('/')
         else: 
             return HttpResponse('Неправильный логин или пароль')
     return render(request, 'login.html')
         
-        
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+    
         
 def price(request):
     price = PriceList.objects.all()
@@ -48,3 +51,13 @@ def about(request):
 def index(request):
     news = News.objects.all()
     return render(request, 'index.html', {'news': news})
+
+
+@csrf_exempt
+def orders(request):
+    object = PriceList.objects.all()
+    if request.method == 'POST':
+        number = request.POST.get('number')
+        fio = request.POST.get('fio')
+        obj = Orders.objects.create(number = number, fio = fio)
+    return render(request, 'orders.html', {'object': object, 'obj':obj})

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Заказы</title>
+</head>
+
+<body>
+    <header>
+        {% include 'header.html' %}
+    </header>
+
+    <div class="container-2">
+        <div class="form-orders">
+            <form method="post">
+                <label>Выберите услугу</label>
+                <select>
+                    {% for o in object %}
+                    <option value="{{ o.name }}">{{ o.name }}</option>
+                    {%endfor%}
+                </select>
+                <input type="text" , placeholder="Введите ваше имя и фамилию" , name="fio">
+                <input type="text" , placeholder="Введите номер телефона" , name="number">
+                <input type="submit" , value="Сделать заказ" , class="button">
+            </form>
+        </div>
+    </div>
+    {% include 'footer.html' %}
+
+</body>
+
+</html>

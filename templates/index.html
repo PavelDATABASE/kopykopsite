@@ -9,6 +9,7 @@
 </head>
 
 <body>
+    <script src="{% static 'js/script.js' %}"></script>
     <header>
         {% include 'header.html' %}
     </header>
@@ -44,60 +45,7 @@
             {% endfor %}
         </div>
     </div>
-
-    <script>
-        let currentSlide = 0;
-        let slides;
-        let dots;
-        let autoSlideInterval;
-
-        // Инициализация при загрузке
-        document.addEventListener('DOMContentLoaded', function () {
-            slides = document.querySelectorAll('.carousel-slide');
-            dots = document.querySelectorAll('.carousel-dot');
-
-            // Запустить автоматическую прокрутку
-            startAutoSlide();
-        });
-
-        function showSlide(n) {
-            // Скрываем все слайды
-            slides.forEach(slide => slide.classList.remove('active'));
-            dots.forEach(dot => dot.classList.remove('active'));
-
-            // Вычисляем индекс
-            if (n >= slides.length) currentSlide = 0;
-            else if (n < 0) currentSlide = slides.length - 1;
-            else currentSlide = n;
-
-            // Показываем текущий слайд
-            slides[currentSlide].classList.add('active');
-            if (dots[currentSlide]) {
-                dots[currentSlide].classList.add('active');
-            }
-        }
-
-        function moveSlide(direction) {
-            showSlide(currentSlide + direction);
-            resetAutoSlide();
-        }
-
-        function goToSlide(n) {
-            showSlide(n);
-            resetAutoSlide();
-        }
-
-        function startAutoSlide() {
-            autoSlideInterval = setInterval(() => {
-                showSlide(currentSlide + 1);
-            }, 4000); 
-        }
-
-        function resetAutoSlide() {
-            clearInterval(autoSlideInterval);
-            startAutoSlide();
-        }
-    </script>
+    {% include 'footer.html' %}
 </body>
 
 </html>
