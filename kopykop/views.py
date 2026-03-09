@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from .models import PriceList, News, Orders
+from .telegram_bot import notify_admin
 
 
 @csrf_exempt
@@ -59,5 +60,23 @@ def orders(request):
     if request.method == 'POST':
         number = request.POST.get('number')
         fio = request.POST.get('fio')
-        obj = Orders.objects.create(number = number, fio = fio)
-    return render(request, 'orders.html', {'object': object, 'obj':obj})
+        name_id = request.POST.get('name')
+        
+        # Проверяем, что name_id получен и преобразуем в int
+        if name_id:
+            try:
+                # Получаем объект PriceList по ID
+                price_item = PriceList.objects.get(id=int(name_id))
+                obj = Orders.objects.create(name=price_item, number=number, fio=fio)
+                notify_admin(obj)
+            except (PriceList.DoesNotExist, ValueError) as e:
+                print(f"Error: {e}")
+                return HttpResponse(f"Ошибка: {e}")
+        else:
+            return HttpResponse("ОШИБКА! Выберите услугу")
+    return render(request, 'orders.html', {'object': object})
+
+
+def orders_list(request):
+    object_list = Orders.objects.all()
+    return render(request, 'orders_list.html', {'obj':object_list})

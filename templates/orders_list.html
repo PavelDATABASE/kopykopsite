@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" href="{% static 'images/favicon4.png' %}" type="images/favicon3.png">
+    <title>Список заказов</title>
+</head>
+
+<body>
+    <header>
+        {% include 'header.html' %}
+    </header>
+
+    <div class="container-orders">
+        <div class="container-price">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Название заказа</th>
+                        <th>Наименование услуги</th>
+                        <th>Имя и фамилия</th>
+                        <th>Номер телефона</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for o in obj %}
+                    <tr>
+                        <td>{{ o.orders_name }}</td>
+                        <td>{{ o.name }}</td>
+                        <td>{{o.fio}}</td>
+                        <td>{{o.number}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        {% include 'footer.html' %}
+    </footer>
+</body>
+
+</html>

@@ -99,21 +99,30 @@ document.addEventListener('DOMContentLoaded', function () {
     const isTouchDevice = !window.matchMedia('(hover: hover)').matches;
 
     if (isTouchDevice) {
-        // Для сенсорных устройств - по клику
         toggle.addEventListener('click', function (e) {
             e.preventDefault();
             const isShown = menu.style.display === 'block';
             menu.style.display = isShown ? 'none' : 'block';
         });
 
-        // Закрывать при клике вне меню
         document.addEventListener('click', function (e) {
             if (!dropdown.contains(e.target)) {
                 menu.style.display = 'none';
             }
         });
     } else {
-        // Для ПК - по наведению (оставляем CSS hover)
-        // Никакой JS логики не нужно, всё работает через CSS
     }
 });
+
+
+
+
+document.getElementById('MyForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    document.getElementById('window').classList.add('open');
+})
+
+document.getElementById('closeWindow').addEventListener('click', function (e) {
+    document.getElementById('window').classList.remove('open')
+})
+

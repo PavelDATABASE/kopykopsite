@@ -44,6 +44,18 @@ class Orders(models.Model):
         verbose_name = "Заказ"
         verbose_name_plural = "Заказы"
         
+    def save(self, *args, **kwargs):
+        # Если orders_name не установлен, генерируем автоматически
+        if not self.orders_name:
+            # Сначала сохраняем объект, чтобы получить ID
+            super().save(*args, **kwargs)
+            # Теперь у нас есть ID, генерируем название
+            self.orders_name = f"Заказ #{self.id}"
+            # Сохраняем снова с обновлённым названием
+            super().save(update_fields=['orders_name'])
+        else:
+            super().save(*args, **kwargs)
+        
     def __str__(self):
-        return self.orders_name
+        return self.orders_name or "Без названия"
         

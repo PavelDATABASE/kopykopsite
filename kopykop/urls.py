@@ -31,6 +31,7 @@ urlpatterns = [
     path('abot/', views.about, name = 'about'),
     path('logout/', views.logout_view, name='logout'),
     path('orders/', views.orders, name='orders'),
+    path('orders_list/', views.orders_list, name='orders_list'),
     path('admin/', admin.site.urls),
 ]
 if settings.DEBUG:
