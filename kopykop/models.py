@@ -1,4 +1,33 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    phone = models.CharField(max_length=15, verbose_name="Телефон", blank=True, null=True)
+    avatar = models.ImageField(upload_to='avatars/%Y/%m/%d/', verbose_name="Аватарка", null=True, blank=True)
+    
+    class Meta:
+        verbose_name = "Профиль"
+        verbose_name_plural = "Профили"
+    
+    def __str__(self):
+        return f"Профиль {self.user.username}"
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    """Создаёт профиль при создании пользователя"""
+    if created:
+        Profile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    """Сохраняет профиль при изменении пользователя"""
+    instance.profile.save()
 
 class PriceList(models.Model):
     name = models.CharField(max_length=100, verbose_name="Наименование услуги", null=True, blank=True)
@@ -15,9 +44,6 @@ class PriceList(models.Model):
     
     
 class News(models.Model):
-    title = models.CharField(max_length=100, verbose_name="Заголовок новости", null=True, blank=True)
-    title_big = models.CharField(max_length=100, verbose_name="Важная новость", null=True, blank=True)
-    description = models.CharField(max_length=1000, verbose_name="Описание новости", null=True, blank=True)
     images = models.ImageField(upload_to='uploads/%Y/%m/%d/', verbose_name="Изображение", null=True, blank=True)
     images_title_big = models.CharField(max_length=100, verbose_name="Текст услуги (большой)", null=True, blank=True)
     images_title = models.CharField(max_length=100, verbose_name="Текст услуги (средний)", null=True, blank=True)
@@ -29,15 +55,27 @@ class News(models.Model):
         verbose_name_plural = 'Новости'
         
     def __str__(self):
-        return self.title_big or self.title or "Без названия"
+        return self.images_title_big or self.images_title or "Без названия"
     
     
+def order_file_path(instance, filename):
+    """Генерирует уникальный путь для файла заказа"""
+    import uuid
+    import os
+    ext = filename.split('.')[-1]
+    new_filename = f'order_{uuid.uuid4().hex}.{ext}'
+    return f'orders/{new_filename}'
+
+
 class Orders(models.Model):
     name = models.ForeignKey(PriceList, on_delete=models.CASCADE, related_name='names')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders', null=True, blank=True)
     
     orders_name = models.CharField(max_length=100, verbose_name="Название заказа", null=True, blank=True)
     number = models.CharField(max_length=15, verbose_name="Номер телефона", null=True, blank=True)
     fio = models.CharField(max_length=100, verbose_name="Ф.И", blank=True, null=True)
+    description = models.CharField(max_length=200, verbose_name="Дополнительная информация", null=True, blank=True)
+    file = models.FileField(upload_to=order_file_path, verbose_name="Файл", max_length=255, null=True, blank=True)
     
     class Meta:
         ordering = ('id', )

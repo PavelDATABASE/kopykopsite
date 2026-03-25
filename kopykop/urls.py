@@ -28,10 +28,11 @@ urlpatterns = [
     path('register/', auth_views.register, name = 'register'),
     path('login/', auth_views.user_login, name = 'login'),
     path('price/', views.price, name = 'price' ),
-    path('abot/', views.about, name = 'about'),
+    path('about/', views.about, name = 'about'),
     path('logout/', views.logout_view, name='logout'),
     path('orders/', views.orders, name='orders'),
     path('orders_list/', views.orders_list, name='orders_list'),
+    path('profile/', views.profile, name='profile'),
     path('admin/', admin.site.urls),
 ]
 if settings.DEBUG:

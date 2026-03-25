@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
+{% comment %} {% load media_tags %} {% endcomment %}
 
 <head>
     <meta charset="UTF-8">
@@ -15,34 +16,62 @@
         {% include 'header.html' %}
     </header>
 
+
     <div class="container-orders">
+        <div class="info">
+            <h1>Список заказов</h1>
+        </div>
+        <!-- Поиск -->
+        <form method="get" action="{% url 'orders_list' %}" class="search-form">
+            <input type="text" name="q" value="{{ query }}" placeholder="Поиск по заказам..." class="search-input">
+            <button type="submit" class="search-button">Найти</button>
+            {% if query %}
+            <a href="{% url 'orders_list' %}" class="search-clear">Очистить</a>
+            {% endif %}
+        </form>
+
         <div class="container-price">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Название заказа</th>
-                        <th>Наименование услуги</th>
-                        <th>Имя и фамилия</th>
-                        <th>Номер телефона</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for o in obj %}
-                    <tr>
-                        <td>{{ o.orders_name }}</td>
-                        <td>{{ o.name }}</td>
-                        <td>{{o.fio}}</td>
-                        <td>{{o.number}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Название заказа</th>
+                            <th>Наименование услуги</th>
+                            <th>Имя и фамилия</th>
+                            <th>Номер телефона</th>
+                            <th>Доп. информация</th>
+                            <th>Файл</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for o in obj %}
+                        <tr>
+                            <td>{{ o.orders_name }}</td>
+                            <td>{{ o.name }}</td>
+                            <td>{{o.fio}}</td>
+                            <td>{{o.number}}</td>
+                            <td>{{o.description}}</td>
+                            <td>
+                                {% if o.file %}
+                                <a href="{{ o.file.url }}" download="{{ o.file.name|slice:'8:' }}" class="file-download">
+                                    Скачать
+                                </a>
+                                {% else %}
+                                <span style="color: #999;">Нет</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <footer>
-        {% include 'footer.html' %}
-    </footer>
+<footer>
+ {% include 'footer.html' %}
+</footer>
+<script src="{% static 'js/script.js' %}"></script>
 </body>
 
 </html>

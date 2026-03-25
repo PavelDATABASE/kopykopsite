@@ -10,7 +10,6 @@
 </head>
 
 <body>
-    <script src="{% static 'js/script.js' %}"></script>
     <header>
         {% include 'header.html' %}
     </header>
@@ -46,7 +45,44 @@
             {% endfor %}
         </div>
     </div>
+
+    <div class="main-info">
+        <div class="index-info">
+            <p>Наш копицентр на рынке уже более 10 лет. Основные направления нашей деятельности: </p>
+            <ul>
+                <li>Фотография на документы</li>
+                <li>Копировальные услуги</li>
+                <li>Оцифровка информации</li>
+                <li>Печать на кружке/футболке</li>
+            </ul>
+            <p>Полный список услуг так же представлен в нашем <a href="{% url 'price' %}">Прайс-листе</a></p>
+        </div>
+    </div>
+    <div class="images-grid">
+        <div class="images-card">
+            <img src="{% static 'images/photo1.jpg' %}" alt="Изображение">
+        </div>
+        <div class="images-card">
+            <img src="{% static 'images/photo2.jpg' %}" alt="Изображение">
+        </div>
+        <div class="images-card">
+            <img src="{% static 'images/photo3.jpg' %}" alt="Изображение">
+        </div>
+        <div class="images-card">
+            <img src="{% static 'images/photo4.jpg' %}" alt="Изображение">
+        </div>
+        <div class="images-card">
+            <img src="{% static 'images/photo5.jpg' %}" alt="Изображение">
+        </div>
+        <div class="images-card">
+            <img src="{% static 'images/photo6.jpg' %}" alt="Изображение">
+        </div>
+    </div>
+
+
+
     {% include 'footer.html' %}
+    <script src="{% static 'js/script.js' %}"></script>
 </body>
 
 </html>

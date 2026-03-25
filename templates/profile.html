@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль</title>
+    <link rel="icon" href="{% static 'images/favicon4.png' %}" type="images/favicon3.png">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <header>
+        {% include 'header.html' %}
+    </header>
+
+    <div class="container-profile">
+        <div class="profile-card">
+            <div class="profile-main">
+                <div class="profile-image">
+                    {% if user.profile.avatar %}
+                    <img src="{{ user.profile.avatar.url }}" alt="Аватар">
+                    {% else %}
+                    <img src="{% static 'images/logo.png' %}" alt="Аватар">
+                    {% endif %}
+                </div>
+                <div class="profile-info">
+                    <div class="profile-header">
+                        <h2>Личный кабинет</h2>
+                        <button class="edit-profile-btn" onclick="toggleEditForm()">
+                            ✏️ Изменить
+                        </button>
+                    </div>
+
+                    <div class="profile-view">
+                        <div class="profile-field">
+                            <span class="profile-label">Имя пользователя:</span>
+                            <span class="profile-value">{{ user.username }}</span>
+                        </div>
+                        <div class="profile-field">
+                            <span class="profile-label">Имя:</span>
+                            <span class="profile-value">{{ user.first_name|default:"-" }}</span>
+                        </div>
+                        <div class="profile-field">
+                            <span class="profile-label">Фамилия:</span>
+                            <span class="profile-value">{{ user.last_name|default:"-" }}</span>
+                        </div>
+                        <div class="profile-field">
+                            <span class="profile-label">Email:</span>
+                            <span class="profile-value">{{ user.email|default:"Не указан" }}</span>
+                        </div>
+                        <div class="profile-field">
+                            <span class="profile-label">Телефон:</span>
+                            <span class="profile-value">{{ user.profile.phone|default:"Не указан" }}</span>
+                        </div>
+                    </div>
+
+                    <form method="post" class="profile-form" id="editForm" style="display: none;"
+                        enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="profile-field">
+                            <label class="profile-label" for="id_avatar">Аватарка:</label>
+                            <input type="file" name="avatar" id="id_avatar" class="profile-input" accept="image/*">
+                            {% if user.profile.avatar %}
+                            <span class="current-avatar">Текущее: {{ user.profile.avatar.name }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="profile-field">
+                            <label class="profile-label" for="id_first_name">Имя:</label>
+                            <input type="text" name="first_name" id="id_first_name" class="profile-input"
+                                value="{{ user.first_name }}">
+                        </div>
+                        <div class="profile-field">
+                            <label class="profile-label" for="id_last_name">Фамилия:</label>
+                            <input type="text" name="last_name" id="id_last_name" class="profile-input"
+                                value="{{ user.last_name }}">
+                        </div>
+                        <div class="profile-field">
+                            <label class="profile-label" for="id_email">Email:</label>
+                            <input type="email" name="email" id="id_email" class="profile-input"
+                                value="{{ user.email }}">
+                        </div>
+                        <div class="profile-field">
+                            <label class="profile-label" for="id_phone">Телефон:</label>
+                            <input type="text" name="phone" id="id_phone" class="profile-input"
+                                value="{{ user.profile.phone|default:"" }}">
+                        </div>
+                        <div class="profile-form-buttons">
+                            <button type="submit" class="profile-save-btn">Сохранить</button>
+                            <button type="button" class="profile-cancel-btn" onclick="toggleEditForm()">Отмена</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="profile-orders">
+                <h3>Мои заказы</h3>
+                {% if user_orders %}
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Заказ</th>
+                                <th>Услуга</th>
+                                <th>Ф.И.О.</th>
+                                <th>Телефон</th>
+                                <th>Описание</th>
+                                <th>Файл</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in user_orders %}
+                            <tr>
+                                <td>{{ order.orders_name }}</td>
+                                <td>{{ order.name.name }}</td>
+                                <td>{{ order.fio|default:"-" }}</td>
+                                <td>{{ order.number|default:"-" }}</td>
+                                <td>{{ order.description|default:"-" }}</td>
+                                <td>{% if order.file %}
+                                    <a href="{{ order.file.url }}" download="{{ order.file.name|slice:'8:' }}"
+                                        class="file-download">
+                                        Скачать
+                                    </a>
+                                    {% else %}
+                                    <span style=" color: #999;">Нет</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="no-orders">У вас пока нет заказов</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        {% include 'footer.html' %}
+    </footer>
+
+<script src="{% static 'js/script.js' %}"></script>
+<script>
+ function toggleEditForm() {
+ const viewMode = document.querySelector('.profile-view');
+ const editForm = document.getElementById('editForm');
+ const editBtn = document.querySelector('.edit-profile-btn');
+
+ if (editForm.style.display === 'none') {
+ viewMode.style.display = 'none';
+ editForm.style.display = 'flex';
+ editBtn.style.display = 'none';
+ } else {
+ viewMode.style.display = 'block';
+ editForm.style.display = 'none';
+ editBtn.style.display = 'block';
+ }
+ }
+</script>
+</body>
+
+</html>

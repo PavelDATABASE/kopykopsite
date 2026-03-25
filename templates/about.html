@@ -1,20 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-       {% load static %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="icon" href="{% static 'images/favicon4.png' %}" type="images/favicon3.png">
-    <title>Копи-центр</title>
-</head>
-<body>
+<lang="en">
+
+    <head>
+        {% load static %}
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <link rel="icon" href="{% static 'images/favicon4.png' %}" type="images/favicon3.png">
+        <title>Копи-центр</title>
+    </head>
+
+
 <header>
-    {% include 'header.html' %}
+ {% include 'header.html' %}
 </header>
-{% comment %} <div class="container-2">
-    123123
-</div> {% endcomment %}
+    <div class="carousel">
+        <div class="carousel-track">
+            {% for n in news %}
+            {% if n.images %}
+            <div class="carousel-slide {% if forloop.first %} active {% endif %}">
+                <img src="{{ n.images.url }}" alt="картинка">
+                {% if n.images_title_big or n.images.title or n.images_description %}
+                <div class="carousel-content">
+                    {% if n.images_title_big %}<p class="news-big-title">{{ n.images_title_big }}</p>{% endif %}
+                    {% if n.images_title %}<p class="news-title">{{ n.images_title }}</p>{% endif %}
+                    {% if n.images_description %}<p class="news-text">{{ n.images_description }}</p>{% endif %}
+                </div>
+                {%endif%}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+
+        <button class="carousel-btn prev" onclick="moveSlide(-1)">&#10094;</button>
+        <button class="carousel-btn next" onclick="moveSlide(1)">&#10095;</button>
+
+        <div class="carousel-dots">
+            {% for n in news %}
+            {% if n.images %}
+            <button class="carousel-dot{% if forloop.first %} active{% endif %}"
+                onclick="goToSlide({{ forloop.counter0 }})"></button>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="container-about">
+        <div class="contacts">
+            <h1 style="padding-top: 20px; padding-bottom: 0;">Контакты</h1>
+        </div>
+        <div class="about-info">
+            <p><strong>График работы:</strong> Пн-пт 10:00 - 18:00; суббота, воскресенье - <strong>выходной</strong>
+            </p>
+            <p><strong>Номер телефона: </strong><a href="tel:+7(912)473-73-77">+7 (912) 473-73-77</a></p>
+            <p><strong>Telegram (только сообщения): </strong>+7 (912) 473-73-77</p>
+            <p><strong>Email: </strong><a href="mailto:kopykop@mail.ru">kopykop@mail.ru</a></p>
+            <p><strong>Адрес: </strong><a href="https://yandex.ru/maps/-/CPFKZE0J" target="_blank"
+                    rel="noopener noreferrer">г. Копейск, ул. Победы, д. 3Б</a></p>
+                </div>
+                <div class="container-map">
+                    <div style="width: 1300px; max-width: 100%;">
+                        <iframe
+                            src="https://yandex.ru/map-widget/v1/?ll=61.616005%2C55.115451&mode=search&oid=50386762124&ol=biz&z=20.79"
+                            width="1300" height="400" frameborder="0" allowfullscreen="true">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
 {% include 'footer.html' %}
+<script src="{% static 'js/script.js' %}"></script>
 </body>
-</html>
+
+    </html>

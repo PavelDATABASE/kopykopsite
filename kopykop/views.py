@@ -3,7 +3,9 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from .models import PriceList, News, Orders
+from django.db.models import Q
+from .models import PriceList, News, Orders, Profile
+from .forms import ProfileForm
 from .telegram_bot import notify_admin
 
 
@@ -47,7 +49,8 @@ def price(request):
 
 
 def about(request):
-    return render(request, 'about.html')
+    news = News.objects.all()
+    return render(request, 'about.html', {'news':news})
 
 def index(request):
     news = News.objects.all()
@@ -61,13 +64,25 @@ def orders(request):
         number = request.POST.get('number')
         fio = request.POST.get('fio')
         name_id = request.POST.get('name')
+        description = request.POST.get('description')
+        file = request.FILES.get('file')  # Получаем загруженный файл
         
         # Проверяем, что name_id получен и преобразуем в int
         if name_id:
             try:
                 # Получаем объект PriceList по ID
                 price_item = PriceList.objects.get(id=int(name_id))
-                obj = Orders.objects.create(name=price_item, number=number, fio=fio)
+                # Создаём профиль, если его нет
+                if request.user.is_authenticated:
+                    profile, _ = Profile.objects.get_or_create(user=request.user)
+                obj = Orders.objects.create(
+                    name=price_item,
+                    number=number,
+                    fio=fio,
+                    description = description,
+                    file=file,
+                    user=request.user if request.user.is_authenticated else None
+                )
                 notify_admin(obj)
             except (PriceList.DoesNotExist, ValueError) as e:
                 print(f"Error: {e}")
@@ -78,5 +93,45 @@ def orders(request):
 
 
 def orders_list(request):
-    object_list = Orders.objects.all()
-    return render(request, 'orders_list.html', {'obj':object_list})
+    query = request.GET.get('q', '')  # Получаем поисковый запрос из URL
+    
+    if query:
+        # Ищем по всем полям модели Orders
+        # Q позволяет использовать OR/AND условия
+        object_list = Orders.objects.filter(
+            Q(orders_name__icontains=query) |  # Название заказа
+            Q(name__name__icontains=query) |    # Наименование услуги (через ForeignKey)
+            Q(fio__icontains=query) |           # ФИО
+            Q(number__icontains=query)          # Номер телефона
+        )
+    else:
+        object_list = Orders.objects.all()
+    
+    return render(request, 'orders_list.html', {
+        'obj': object_list,
+        'query': query  # Передаём запрос обратно в шаблон
+    })
+
+
+def profile(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    
+    # Создаём профиль, если его нет (для существующих пользователей)
+    profile, created = Profile.objects.get_or_create(user=request.user)
+    
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = ProfileForm(instance=profile)
+    
+    # Получаем заказы текущего пользователя
+    user_orders = Orders.objects.filter(user=request.user).order_by('-id')
+    
+    return render(request, 'profile.html', {
+        'user_orders': user_orders,
+        'form': form
+    })
